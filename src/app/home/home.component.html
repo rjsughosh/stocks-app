@@ -1,0 +1,71 @@
+<div class="flex flex-col full-height dashboard-wrapper" [class.theme-light]='!darkTheme'
+  [class.theme-dark]='darkTheme'>
+  <header class="header flex flex-between flex-align-center">
+    <div>
+      <img class='logo' *ngIf='darkTheme' src='../assets/growth-light.svg' />
+      <img class='logo' *ngIf='!darkTheme' src='../assets/growth-dark.svg' />
+    </div>
+    <div class="flex flex-align-center profile-text relative">
+      <div class="flex flex-align-center">
+        <div class="capitalize">sughosh jahagirdar</div>
+        <img class="profile-picture" *ngIf='darkTheme' src='../assets/profile-picture-light.svg' />
+        <img class="profile-picture" *ngIf='!darkTheme' src='../assets/profile-picture-dark.svg' />
+      </div>
+      <div>
+        <button (click)='darkTheme = !darkTheme; '>Switch theme</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="full-height flex scroll dashboard-container">
+    <div class='form-sidebar'>
+      <div class='flex'>
+        <input id="stockTicker" (keyup.enter)='addSymbol()' [(ngModel)]='tickerSymbol' class="text-box" type="text"
+          placeholder="Stock Symbol" />
+        <button (click)='addSymbol()' class='button add-button'>Add</button>
+      </div>
+
+      <div class='stock-list'>
+        <ul>
+          <li class='each-stock' *ngFor='let symbol of tickerSymbols'>{{symbol}}</li>
+
+        </ul>
+      </div>
+      <div class='testing hide'>
+        <div>
+          ticker symbols from textbox
+          <span *ngFor='let symbol2 of tickerSymbols'> {{symbol2}},</span>
+        </div>
+        <div>
+          symbols fromobject keys
+          <span *ngFor='let symbol3 of barChartLabels'> {{symbol3}},</span>
+        </div>
+        <div>
+          values
+          <span *ngFor='let symbol3 of barChartData[0].data'> {{symbol3}},</span>
+        </div>
+      </div>
+
+
+
+      <div class='flex flex-center' *ngIf='barChartLabels.length'>
+        <button (click)='clearAll()' class='clear-all button'>Clear All</button>
+      </div>
+
+    </div>
+    <div class='flex flex-center graph-container'>
+
+      <div class='bar-chart'>
+        <canvas height='350px' width='600px' *ngIf='barChartLabels.length' baseChart [datasets]="barChartData"
+          [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend"
+          [chartType]="barChartType"></canvas>
+
+        <div *ngIf='barChartLabels.length == 0' class='flex flex-col flex-center no-data'>
+          <img *ngIf='!darkTheme' src='../assets/cancel-dark.svg'>
+          <img *ngIf='darkTheme' src='../assets/cancel-light.svg'>
+          No data
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
