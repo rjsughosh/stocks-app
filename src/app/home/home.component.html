@@ -11,9 +11,6 @@
         <img class="profile-picture" *ngIf='darkTheme' src='assets/profile-picture-light.svg' />
         <img class="profile-picture" *ngIf='!darkTheme' src='assets/profile-picture-dark.svg' />
       </div>
-      <div>
-        <button (click)='darkTheme = !darkTheme; '>Switch theme</button>
-      </div>
     </div>
   </header>
 
@@ -27,7 +24,10 @@
 
       <div class='stock-list'>
         <ul>
-          <li class='each-stock' *ngFor='let symbol of tickerSymbols'>{{symbol}}</li>
+          <li class='each-stock flex flex-col' *ngFor='let symbol of objectKeys(tickerSymbolsObj)'>
+            <div>{{symbol}}</div>
+            <div class='company-name'>{{tickerSymbolsObj[symbol]}}</div>
+          </li>
 
         </ul>
       </div>
@@ -53,10 +53,16 @@
       </div>
 
     </div>
-    <div class='flex flex-center graph-container'>
+    <div class='flex flex-center flex-col graph-container'>
+      <div class='toggle-switch'>
+        <label class="switch">
+          <input type="checkbox" [checked]="!darkTheme" (change)="darkTheme = !darkTheme">
+          <span class="slider round"></span>
+        </label>
+      </div>
 
-      <div class='bar-chart'>
-        <canvas height='350px' width='600px' *ngIf='barChartLabels.length' baseChart [datasets]="barChartData"
+      <div class='bar-chart full-height'>
+        <canvas height='450px' width='600px' *ngIf='barChartLabels.length' baseChart [datasets]="barChartData"
           [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend"
           [chartType]="barChartType"></canvas>
 

@@ -35,7 +35,11 @@ export class HomeComponent implements OnInit {
       }
     }
   };
+
+  objectKeys = Object.keys;
+
   public tickerSymbols = [];
+  public tickerSymbolsObj = {};
   public barChartLabels = [];
   public barChartType = 'bar';
   public barChartLegend = false;
@@ -48,6 +52,7 @@ export class HomeComponent implements OnInit {
 
 
   chartObj = {}
+  companyNames = []
   tickerSymbol = ''
   disableInput: boolean = false;
 
@@ -65,6 +70,7 @@ export class HomeComponent implements OnInit {
     if (this.tickerSymbols.length <= 9) {
       if (!this.tickerSymbols.includes(this.tickerSymbol)) {
         this.tickerSymbols.push(this.tickerSymbol)
+        this.tickerSymbolsObj[this.tickerSymbol] = ''
       }
       else {
         this.toasterPop(`${this.tickerSymbol} already exists`);
@@ -96,7 +102,8 @@ export class HomeComponent implements OnInit {
       let finalUrl = `${this.baseUrl}${ticker}/quote?token=${this.apiToken}`;
       this.http.get<any>(finalUrl).subscribe(
         data => {
-          this.chartObj[ticker] = data.latestPrice
+          this.chartObj[ticker] = [data.latestPrice, data.companyName]
+          // this.chartObj['companyName'] = data.companyName
           if (index == this.tickerSymbols.length - 1) {
             this.loadDataIntoGraph();
           }
@@ -116,12 +123,17 @@ export class HomeComponent implements OnInit {
   }
 
   loadDataIntoGraph() {
-    let graphArr = []
+    let graphArr = [], companyNamesArr = []
     let tickers = Object.keys(this.chartObj)
     for (let i = 0; i < tickers.length; i++) {
-      graphArr.push(this.chartObj[tickers[i]])
+      graphArr.push(this.chartObj[tickers[i]][0])
+      this.tickerSymbolsObj[tickers[i]] = this.chartObj[tickers[i]][1]
+      companyNamesArr.push(
+        this.chartObj[tickers[i]][1]
+      )
     }
     this.barChartLabels = [...tickers];
+    this.companyNames = [...companyNamesArr]
     // this.barChartOptions.scales.yAxes[0].ticks.max = (Math.ceil(Math.max(...graphArr) + 50))
     this.barChartData[0].data = [...graphArr]
   }
