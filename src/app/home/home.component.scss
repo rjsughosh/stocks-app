@@ -4,11 +4,11 @@
     margin-left: 10px;
 }
 
-.profile-text {
-    font-size: 16px;
-    padding-left: 8px;
-    text-align: right;
-    white-space: nowrap;
+
+
+.logo-text{
+    font-size: 2rem;
+    margin: 0 0 0 1rem;
 }
 
 .form-sidebar{
@@ -23,6 +23,10 @@ header {
 
 .graph-container{
     margin:auto
+}
+
+.close-icon{
+    width:1.5rem;
 }
 
 .bar-chart{
@@ -58,9 +62,9 @@ header {
 //toggle switch
 
 .toggle-switch{
-    position: absolute;
-    top:70px;
-    right:0;
+    // position: absolute;
+    // top:70px;
+    // right:0;
     transform: scale(0.7);
     .slider.round {
         border-radius: 34px;
@@ -108,11 +112,11 @@ header {
     }
       
     input:checked + .slider {
-    background-color: #8CECFF;
+    background-color: #42a7f5;
     }
       
     input:focus + .slider {
-    box-shadow: 0 0 1px #8CECFF;
+    box-shadow: 0 0 1px #42a7f5;
     }
       
     input:checked + .slider:before {
@@ -131,7 +135,7 @@ header {
     header{
         background: rgb(140, 236, 255);
     }
-    .profile-text, .stock-list, .no-data{
+    .profile-text, .stock-list, .no-data, .logo-text{
         color: #333;
 
     }
@@ -162,7 +166,7 @@ header {
     header{
         background: rgb(13, 22, 24);
     }
-    .profile-text, .stock-list, .no-data{
+    .profile-text, .stock-list, .no-data, .logo-text{
         color: #fff;
 
     }
@@ -204,12 +208,21 @@ header {
 
 //////////////////// Media query
 @media only screen and (max-width: 768px) {
+    .dashboard-wrapper{
+        // min-height: 100vh;
+        height: auto;
+    }
     .dashboard-container{
         flex-direction: column;
+        height: auto;
+        min-height: 100vh;
+        // overflow: hidden;
     }
     .form-sidebar{
         width:100%;
         border-right: 0px !important;
+        // overflow: hidden;
+        height:auto;
     }
 
     .theme-dark{

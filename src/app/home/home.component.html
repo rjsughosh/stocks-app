@@ -1,21 +1,26 @@
 <div class="flex flex-col full-height dashboard-wrapper" [class.theme-light]='!darkTheme'
   [class.theme-dark]='darkTheme'>
   <header class="header flex flex-between flex-align-center">
-    <div>
+    <div class='flex flex-align-center'>
       <img class='logo' *ngIf='darkTheme' src='assets/growth-light.svg' />
       <img class='logo' *ngIf='!darkTheme' src='assets/growth-dark.svg' />
+      <h2 class='logo-text'>Stocks - Live</h2>
     </div>
     <div class="flex flex-align-center profile-text relative">
       <div class="flex flex-align-center">
-        <div class="capitalize">sughosh jahagirdar</div>
-        <img class="profile-picture" *ngIf='darkTheme' src='assets/profile-picture-light.svg' />
-        <img class="profile-picture" *ngIf='!darkTheme' src='assets/profile-picture-dark.svg' />
+        <div class="capitalize">switch theme</div>
+        <div class='toggle-switch'>
+          <label class="switch">
+            <input type="checkbox" [checked]="!darkTheme" (change)="darkTheme = !darkTheme">
+            <span class="slider round"></span>
+          </label>
+        </div>
       </div>
     </div>
   </header>
 
   <div class="full-height flex scroll dashboard-container">
-    <div class='form-sidebar'>
+    <div class='form-sidebar scroll'>
       <div class='flex'>
         <input id="stockTicker" (keyup.enter)='addSymbol()' [(ngModel)]='tickerSymbol' class="text-box" type="text"
           placeholder="Stock Symbol" />
@@ -24,9 +29,18 @@
 
       <div class='stock-list'>
         <ul>
-          <li class='each-stock flex flex-col' *ngFor='let symbol of objectKeys(tickerSymbolsObj)'>
-            <div>{{symbol}}</div>
-            <div class='company-name'>{{tickerSymbolsObj[symbol]}}</div>
+          <li class='each-stock flex flex-align-center' *ngFor=' let symbol of objectKeys(tickerSymbolsObj)'>
+            <div class='full-width flex flex-col'>
+              <div>{{symbol}}</div>
+              <div class='company-name'>{{tickerSymbolsObj[symbol]}}</div>
+            </div>
+            <div>
+              <img *ngIf='!darkTheme' src='assets/close-dark.svg' class='pointer close-icon'
+                (click)='deleteStock(symbol)'>
+              <img *ngIf='darkTheme' src='assets/close-light.svg' class='pointer close-icon'
+                (click)='deleteStock(symbol)'>
+            </div>
+
           </li>
 
         </ul>
@@ -54,12 +68,7 @@
 
     </div>
     <div class='flex flex-center flex-col graph-container'>
-      <div class='toggle-switch'>
-        <label class="switch">
-          <input type="checkbox" [checked]="!darkTheme" (change)="darkTheme = !darkTheme">
-          <span class="slider round"></span>
-        </label>
-      </div>
+
 
       <div class='bar-chart full-height'>
         <canvas height='450px' width='600px' *ngIf='barChartLabels.length' baseChart [datasets]="barChartData"

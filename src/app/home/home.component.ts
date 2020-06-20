@@ -51,26 +51,50 @@ export class HomeComponent implements OnInit {
   ];
 
 
-  chartObj = {}
-  companyNames = []
   tickerSymbol = ''
   disableInput: boolean = false;
-
+  timeoutKiller;
+  chartObj = {}
   darkTheme: boolean = true;
 
-  baseUrl = 'https://cloud.iexapis.com/stable/stock/'
-  apiToken = 'pk_044db279039d465eb16ff69f5b0ead45';
+  testUrl_pre = "https://cloud.iexapis.com/stable/stock/market/batch?symbols="
+  testUrl_post = "&types=quote&token=pk_044db279039d465eb16ff69f5b0ead45"
+
 
   constructor(
     private http: HttpClient,
     private toastr: ToastrService
   ) { }
 
+  getData() {
+    let tickerSymbols = this.tickerSymbols
+    let str = ""
+    for (let index = 0; index < tickerSymbols.length; index++) {
+      str += "" + tickerSymbols[index] + ",";
+    }
+    let final_url = this.testUrl_pre + str + this.testUrl_post;
+    this.http.get<any>(final_url).subscribe(
+      data => {
+        console.log('data', data)
+        this.chartObj = data;
+        this.loadDataIntoGraph();
+      },
+      error => {
+        this.toasterPop(`Failed to get data: ${error.error}`);
+      })
+
+    this.timeoutKiller = setTimeout(() => {
+      this.getData();
+    }, 5000);
+
+  }
+
   addSymbol() {
     if (this.tickerSymbols.length <= 9) {
       if (!this.tickerSymbols.includes(this.tickerSymbol)) {
         this.tickerSymbols.push(this.tickerSymbol)
-        this.tickerSymbolsObj[this.tickerSymbol] = ''
+        clearTimeout(this.timeoutKiller);
+        this.getData();
       }
       else {
         this.toasterPop(`${this.tickerSymbol} already exists`);
@@ -79,62 +103,31 @@ export class HomeComponent implements OnInit {
     else {
       this.disableInput = true;
       this.toasterPop(`Max limit: 10 reached`);
-
-      //toaster saying max limit reached
     }
-
     this.tickerSymbol = ''
   }
 
-  toasterPop(message) {
-    this.toastr.error(message, 'Error', {
-      timeOut: 3000
-    });
-  }
-
-  ngOnInit() {
-    this.getStockData();
-  }
-
-  getStockData() {
-    for (let index = 0; index < this.tickerSymbols.length; index++) {
-      let ticker = this.tickerSymbols[index]
-      let finalUrl = `${this.baseUrl}${ticker}/quote?token=${this.apiToken}`;
-      this.http.get<any>(finalUrl).subscribe(
-        data => {
-          this.chartObj[ticker] = [data.latestPrice, data.companyName]
-          // this.chartObj['companyName'] = data.companyName
-          if (index == this.tickerSymbols.length - 1) {
-            this.loadDataIntoGraph();
-          }
-        },
-        error => {
-          this.tickerSymbols.splice(index, 1);
-          console.log(`Error code for ${ticker} : ${error.error}`)
-          this.toasterPop(`Failed to get data for ${ticker}:  ${error.error}`);
-          //toaster saying error message
-
-        })
+  deleteStock(symbol) {
+    let index = this.tickerSymbols.indexOf(symbol.toLowerCase())
+    this.tickerSymbols.splice(index, 1);
+    delete this.tickerSymbolsObj[symbol]
+    clearTimeout(this.timeoutKiller);
+    if (this.tickerSymbols.length) {
+      this.getData();
     }
-    setTimeout(() => {
-      this.getStockData();
-    }, 5000);
-
+    else {
+      this.clearAll()
+    }
   }
 
   loadDataIntoGraph() {
-    let graphArr = [], companyNamesArr = []
+    let graphArr = []
     let tickers = Object.keys(this.chartObj)
     for (let i = 0; i < tickers.length; i++) {
-      graphArr.push(this.chartObj[tickers[i]][0])
-      this.tickerSymbolsObj[tickers[i]] = this.chartObj[tickers[i]][1]
-      companyNamesArr.push(
-        this.chartObj[tickers[i]][1]
-      )
+      graphArr.push(this.chartObj[tickers[i]].quote.latestPrice)
+      this.tickerSymbolsObj[tickers[i]] = this.chartObj[tickers[i]].quote.companyName
     }
     this.barChartLabels = [...tickers];
-    this.companyNames = [...companyNamesArr]
-    // this.barChartOptions.scales.yAxes[0].ticks.max = (Math.ceil(Math.max(...graphArr) + 50))
     this.barChartData[0].data = [...graphArr]
   }
 
@@ -144,6 +137,18 @@ export class HomeComponent implements OnInit {
     this.tickerSymbols = []
     this.tickerSymbolsObj = {}
     this.chartObj = {}
-    this.disableInput = false;
+    clearTimeout(this.timeoutKiller);
+
   }
+
+  toasterPop(message) {
+    this.toastr.error(message, 'Error', {
+      timeOut: 3000
+    });
+  }
+
+  ngOnInit() {
+  }
+
+
 }
