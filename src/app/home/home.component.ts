@@ -142,6 +142,7 @@ export class HomeComponent implements OnInit {
     this.barChartData[0].data = [];
     this.barChartLabels = []
     this.tickerSymbols = []
+    this.tickerSymbolsObj = {}
     this.chartObj = {}
     this.disableInput = false;
   }
