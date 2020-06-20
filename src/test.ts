@@ -21,4 +21,4 @@ const context = require.context('./', true, /\.spec\.ts$/);
 context.keys().map(context);
 
 // Run this for prod build
-// ng build --prod --base-href="https://rjsughosh.github.io/stocks-app/"
+// ng build --prod --base-href="https://rjsughosh.github.io/stocks-app"
