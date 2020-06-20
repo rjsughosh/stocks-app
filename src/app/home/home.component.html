@@ -2,14 +2,14 @@
   [class.theme-dark]='darkTheme'>
   <header class="header flex flex-between flex-align-center">
     <div>
-      <img class='logo' *ngIf='darkTheme' src='../assets/growth-light.svg' />
-      <img class='logo' *ngIf='!darkTheme' src='../assets/growth-dark.svg' />
+      <img class='logo' *ngIf='darkTheme' src='assets/growth-light.svg' />
+      <img class='logo' *ngIf='!darkTheme' src='assets/growth-dark.svg' />
     </div>
     <div class="flex flex-align-center profile-text relative">
       <div class="flex flex-align-center">
         <div class="capitalize">sughosh jahagirdar</div>
-        <img class="profile-picture" *ngIf='darkTheme' src='../assets/profile-picture-light.svg' />
-        <img class="profile-picture" *ngIf='!darkTheme' src='../assets/profile-picture-dark.svg' />
+        <img class="profile-picture" *ngIf='darkTheme' src='assets/profile-picture-light.svg' />
+        <img class="profile-picture" *ngIf='!darkTheme' src='assets/profile-picture-dark.svg' />
       </div>
       <div>
         <button (click)='darkTheme = !darkTheme; '>Switch theme</button>
@@ -61,8 +61,8 @@
           [chartType]="barChartType"></canvas>
 
         <div *ngIf='barChartLabels.length == 0' class='flex flex-col flex-center no-data'>
-          <img *ngIf='!darkTheme' src='../assets/cancel-dark.svg'>
-          <img *ngIf='darkTheme' src='../assets/cancel-light.svg'>
+          <img *ngIf='!darkTheme' src='assets/cancel-dark.svg'>
+          <img *ngIf='darkTheme' src='assets/cancel-light.svg'>
           No data
         </div>
       </div>

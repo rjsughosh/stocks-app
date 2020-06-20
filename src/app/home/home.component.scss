@@ -136,5 +136,19 @@ header {
     }
     .form-sidebar{
         width:100%;
+        border-right: 0px !important;
     }
+
+    .theme-dark{
+        .form-sidebar{
+            // border-bottom: 1px solid #fff;
+        }
+    }
+    .theme-light{
+        .form-sidebar{
+            // border-bottom: 1px solid #333;
+        }
+    }
+   
+    
   }

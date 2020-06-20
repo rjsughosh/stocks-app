@@ -4,6 +4,7 @@ import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { HttpClient } from '@angular/common/http';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import * as pluginDataLabels from 'chartjs-plugin-datalabels';
+import { ToastrService } from 'ngx-toastr';
 
 import { Label } from 'ng2-charts';
 
@@ -55,7 +56,10 @@ export class HomeComponent implements OnInit {
   baseUrl = 'https://cloud.iexapis.com/stable/stock/'
   apiToken = 'pk_044db279039d465eb16ff69f5b0ead45';
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    private toastr: ToastrService
+  ) { }
 
   addSymbol() {
     if (this.tickerSymbols.length <= 9) {
@@ -63,17 +67,23 @@ export class HomeComponent implements OnInit {
         this.tickerSymbols.push(this.tickerSymbol)
       }
       else {
-        this.tickerSymbols.push(this.tickerSymbol)
-
-        // throw error saying already exists
+        this.toasterPop(`${this.tickerSymbol} already exists`);
       }
     }
     else {
       this.disableInput = true;
+      this.toasterPop(`Max limit: 10 reached`);
+
       //toaster saying max limit reached
     }
 
     this.tickerSymbol = ''
+  }
+
+  toasterPop(message) {
+    this.toastr.error(message, 'Error', {
+      timeOut: 3000
+    });
   }
 
   ngOnInit() {
@@ -94,6 +104,7 @@ export class HomeComponent implements OnInit {
         error => {
           this.tickerSymbols.splice(index, 1);
           console.log(`Error code for ${ticker} : ${error.error}`)
+          this.toasterPop(`Failed to get data for ${ticker}:  ${error.error}`);
           //toaster saying error message
 
         })

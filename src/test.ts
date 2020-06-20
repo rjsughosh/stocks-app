@@ -6,6 +6,7 @@ import {
   BrowserDynamicTestingModule,
   platformBrowserDynamicTesting
 } from '@angular/platform-browser-dynamic/testing';
+import { build$ } from 'protractor/built/element';
 
 declare const require: any;
 
@@ -18,3 +19,6 @@ getTestBed().initTestEnvironment(
 const context = require.context('./', true, /\.spec\.ts$/);
 // And load the modules.
 context.keys().map(context);
+
+// Run this for prod build
+// ng build --prod --base-href="ttps://rjsughosh.github.io/stocks-app/"
