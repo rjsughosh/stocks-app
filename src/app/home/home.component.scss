@@ -134,6 +134,8 @@ header {
     background-color: #fff;
     header{
         background: rgb(140, 236, 255);
+        border-right: 1px solid rgb(140, 236, 255);
+
     }
     .profile-text, .stock-list, .no-data, .logo-text{
         color: #333;
@@ -167,7 +169,8 @@ header {
 .theme-dark{
     background-color: #222;
     header{
-        background: #121f21
+        background: #121f21;
+        border-bottom: 1px solid #666;
     }
     .profile-text, .stock-list, .no-data, .logo-text{
         color: #fff;

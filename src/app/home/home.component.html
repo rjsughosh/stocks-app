@@ -29,16 +29,16 @@
 
       <div class='stock-list'>
         <ul>
-          <li class='each-stock flex flex-align-center' *ngFor=' let symbol of objectKeys(tickerSymbolsObj)'>
+          <li class='each-stock flex flex-align-center' *ngFor='let each of graphArr'>
             <div class='full-width flex flex-col'>
-              <div>{{symbol}}</div>
-              <div class='company-name'>{{tickerSymbolsObj[symbol]}}</div>
+              <div>{{each.tickerSymbol}}</div>
+              <div class='company-name'>{{each.companyName}}</div>
             </div>
             <div>
               <img *ngIf='!darkTheme' src='assets/close-dark.svg' class='pointer close-icon'
-                (click)='deleteStock(symbol)'>
+                (click)='deleteStock(each)'>
               <img *ngIf='darkTheme' src='assets/close-light.svg' class='pointer close-icon'
-                (click)='deleteStock(symbol)'>
+                (click)='deleteStock(each)'>
             </div>
 
           </li>

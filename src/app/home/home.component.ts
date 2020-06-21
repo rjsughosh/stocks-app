@@ -5,12 +5,8 @@ import { HttpClient } from '@angular/common/http';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import * as pluginDataLabels from 'chartjs-plugin-datalabels';
 import { ToastrService } from 'ngx-toastr';
-
 import { Label } from 'ng2-charts';
 
-
-// import { finnhub } from 'finnhub';
-// declare var System: any;
 
 @Component({
   selector: 'app-home',
@@ -62,7 +58,8 @@ export class HomeComponent implements OnInit {
   tickerSymbol = ''
   disableInput: boolean = false;
   timeoutKiller;
-  chartObj = {}
+  chartObj = {};
+  graphArr = [];
   darkTheme: boolean = true;
   isValid: boolean = false;
 
@@ -77,31 +74,31 @@ export class HomeComponent implements OnInit {
 
 
   validate() {
+    let stockName = this.tickerSymbol
     debugger
     let baseUrl = 'https://cloud.iexapis.com/stable/stock/'
     let apiToken = 'pk_044db279039d465eb16ff69f5b0ead45';
-    let finalUrl = `${baseUrl}${this.tickerSymbol}/quote?token=${apiToken}`;
+    let finalUrl = `${baseUrl}${stockName}/quote?token=${apiToken}`;
     this.http.get<any>(finalUrl).subscribe(
       data => {
         this.isValid = true;
         this.addToList();
       },
       error => {
-        this.toasterPop(`Failed to get data for ${this.tickerSymbol}: ${error.error}`);
+        this.toasterPop(`Failed to get data for ${stockName}: ${error.error}`);
         this.tickerSymbol = ''
         this.isValid = false;
       });
   }
   getData() {
-    let tickerSymbols = this.tickerSymbols
     let str = ""
-    for (let index = 0; index < tickerSymbols.length; index++) {
-      str += "" + tickerSymbols[index] + ",";
+    for (let ticker of this.tickerSymbols) {
+
+      str += "" + ticker + ",";
     }
     let final_url = this.testUrl_pre + str + this.testUrl_post;
     this.http.get<any>(final_url).subscribe(
       data => {
-        console.log('data', data)
         this.chartObj = data;
         this.loadDataIntoGraph();
       },
@@ -118,8 +115,8 @@ export class HomeComponent implements OnInit {
   addToList() {
     if (this.isValid) {
       if (this.tickerSymbols.length <= 9) {
-        if (!this.tickerSymbols.includes(this.tickerSymbol)) {
-          this.tickerSymbols.push(this.tickerSymbol)
+        if (!this.tickerSymbols.includes(this.tickerSymbol.toLowerCase())) {
+          this.tickerSymbols.push(this.tickerSymbol.toLowerCase())
           clearTimeout(this.timeoutKiller);
           this.getData();
         }
@@ -138,10 +135,13 @@ export class HomeComponent implements OnInit {
 
 
   deleteStock(symbol) {
-    let index = this.tickerSymbols.indexOf(symbol.toLowerCase())
+    let index = this.graphArr.indexOf(symbol)
+    this.graphArr.splice(index, 1);
+    index = this.tickerSymbols.indexOf(symbol.tickerSymbol.toLowerCase())
     this.tickerSymbols.splice(index, 1);
-    delete this.tickerSymbolsObj[symbol]
+
     clearTimeout(this.timeoutKiller);
+
     if (this.tickerSymbols.length) {
       this.getData();
     }
@@ -151,21 +151,25 @@ export class HomeComponent implements OnInit {
   }
 
   loadDataIntoGraph() {
-    let graphArr = []
+    this.graphArr = []
     let tickers = Object.keys(this.chartObj)
     for (let i = 0; i < tickers.length; i++) {
-      graphArr.push(this.chartObj[tickers[i]].quote.latestPrice)
-      this.tickerSymbolsObj[tickers[i]] = this.chartObj[tickers[i]].quote.companyName
+      let obj = {
+        tickerSymbol: tickers[i],
+        stockValue: this.chartObj[tickers[i]].quote.latestPrice,
+        companyName: this.chartObj[tickers[i]].quote.companyName,
+      }
+      this.graphArr.push(obj)
     }
-    this.barChartLabels = [...tickers];
-    this.barChartData[0].data = [...graphArr]
+    this.barChartLabels = [...this.graphArr.map(i => i.tickerSymbol)];
+    this.barChartData[0].data = [...this.graphArr.map(i => i.stockValue)]
   }
 
   clearAll() {
     this.barChartData[0].data = [];
     this.barChartLabels = []
     this.tickerSymbols = []
-    this.tickerSymbolsObj = {}
+    this.graphArr = []
     this.chartObj = {}
     clearTimeout(this.timeoutKiller);
 
