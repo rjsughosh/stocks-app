@@ -35,10 +35,8 @@
               <div class='company-name'>{{each.companyName}}</div>
             </div>
             <div>
-              <img *ngIf='!darkTheme' src='assets/close-dark.svg' class='pointer close-icon'
-                (click)='deleteStock(each)'>
-              <img *ngIf='darkTheme' src='assets/close-light.svg' class='pointer close-icon'
-                (click)='deleteStock(each)'>
+              <span *ngIf='!darkTheme' class='pointer close-icon' (click)='deleteStock(each)'>⊗</span>
+              <span *ngIf='darkTheme' class='pointer close-icon' (click)='deleteStock(each)'>⊗</span>
             </div>
 
           </li>

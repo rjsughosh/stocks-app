@@ -26,7 +26,7 @@ header {
 }
 
 .close-icon{
-    width:1.5rem;
+font-size: 2.5rem;
 }
 
 .bar-chart{
@@ -159,6 +159,9 @@ header {
    .add-button{
        background-color: #666;
    }
+   .close-icon{
+       color:#333;
+   }
     
 
     
@@ -191,6 +194,9 @@ header {
         }
     }
     
+    .close-icon{
+        color:#fff;
+    }
    
 }
 

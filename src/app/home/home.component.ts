@@ -20,6 +20,7 @@ export class HomeComponent implements OnInit {
   public barChartOptions: ChartOptions = {
     responsive: true,
     maintainAspectRatio: true,
+
     scales: {
       xAxes: [{
         ticks: {
@@ -36,6 +37,7 @@ export class HomeComponent implements OnInit {
       datalabels: {
         anchor: 'end',
         align: 'end',
+        color: '#fff',
       }
     }
   };
@@ -94,6 +96,13 @@ export class HomeComponent implements OnInit {
             ticks: { fontColor: 'white' },
             gridLines: { color: 'rgba(255,255,255,0.1)' }
           }]
+        },
+        plugins: {
+          datalabels: {
+            anchor: 'end',
+            align: 'end',
+            color: '#fff',
+          }
         }
       };
     } else {
@@ -110,6 +119,13 @@ export class HomeComponent implements OnInit {
             ticks: { fontColor: '#000' },
             gridLines: { color: 'rgba(0,0,0,0.1)' }
           }]
+        },
+        plugins: {
+          datalabels: {
+            anchor: 'end',
+            align: 'end',
+            color: '#000'
+          }
         }
       };
     }
