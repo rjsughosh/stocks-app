@@ -19,13 +19,21 @@ import { Label } from 'ng2-charts';
 })
 
 export class HomeComponent implements OnInit {
+
   public barChartPlugins = [pluginDataLabels];
   public barChartOptions: ChartOptions = {
     responsive: true,
     maintainAspectRatio: true,
     scales: {
-      xAxes: [{}], yAxes: [{
-        ticks: {}
+      xAxes: [{
+        ticks: {
+          fontColor: '#888',
+        }
+      }],
+      yAxes: [{
+        ticks: {
+          fontColor: '#888',
+        }
       }]
     },
     plugins: {
@@ -56,6 +64,7 @@ export class HomeComponent implements OnInit {
   timeoutKiller;
   chartObj = {}
   darkTheme: boolean = true;
+  isValid: boolean = false;
 
   testUrl_pre = "https://cloud.iexapis.com/stable/stock/market/batch?symbols="
   testUrl_post = "&types=quote&token=pk_044db279039d465eb16ff69f5b0ead45"
@@ -66,6 +75,23 @@ export class HomeComponent implements OnInit {
     private toastr: ToastrService
   ) { }
 
+
+  validate() {
+    debugger
+    let baseUrl = 'https://cloud.iexapis.com/stable/stock/'
+    let apiToken = 'pk_044db279039d465eb16ff69f5b0ead45';
+    let finalUrl = `${baseUrl}${this.tickerSymbol}/quote?token=${apiToken}`;
+    this.http.get<any>(finalUrl).subscribe(
+      data => {
+        this.isValid = true;
+        this.addToList();
+      },
+      error => {
+        this.toasterPop(`Failed to get data for ${this.tickerSymbol}: ${error.error}`);
+        this.tickerSymbol = ''
+        this.isValid = false;
+      });
+  }
   getData() {
     let tickerSymbols = this.tickerSymbols
     let str = ""
@@ -89,23 +115,27 @@ export class HomeComponent implements OnInit {
 
   }
 
-  addSymbol() {
-    if (this.tickerSymbols.length <= 9) {
-      if (!this.tickerSymbols.includes(this.tickerSymbol)) {
-        this.tickerSymbols.push(this.tickerSymbol)
-        clearTimeout(this.timeoutKiller);
-        this.getData();
+  addToList() {
+    if (this.isValid) {
+      if (this.tickerSymbols.length <= 9) {
+        if (!this.tickerSymbols.includes(this.tickerSymbol)) {
+          this.tickerSymbols.push(this.tickerSymbol)
+          clearTimeout(this.timeoutKiller);
+          this.getData();
+        }
+        else {
+          this.toasterPop(`${this.tickerSymbol} already exists`);
+        }
       }
       else {
-        this.toasterPop(`${this.tickerSymbol} already exists`);
+        this.disableInput = true;
+        this.toasterPop(`Max limit: 10 reached`);
       }
+      this.tickerSymbol = ''
     }
-    else {
-      this.disableInput = true;
-      this.toasterPop(`Max limit: 10 reached`);
-    }
-    this.tickerSymbol = ''
   }
+
+
 
   deleteStock(symbol) {
     let index = this.tickerSymbols.indexOf(symbol.toLowerCase())

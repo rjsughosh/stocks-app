@@ -151,7 +151,10 @@ header {
     .text-box{
         background: #fff;
         color:#666;
-        border:1px solid #666
+        border:1px solid #666;
+        &::placeholder{
+            color: #333;
+        }
     }
    .add-button{
        background-color: #666;
@@ -164,7 +167,7 @@ header {
 .theme-dark{
     background-color: #222;
     header{
-        background: rgb(13, 22, 24);
+        background: #121f21
     }
     .profile-text, .stock-list, .no-data, .logo-text{
         color: #fff;
@@ -182,6 +185,9 @@ header {
     .text-box{
         background: #444;
         color:#fff;
+        &::placeholder{
+            color: #aaa;
+        }
     }
     
    

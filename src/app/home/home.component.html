@@ -11,7 +11,7 @@
         <div class="capitalize">switch theme</div>
         <div class='toggle-switch'>
           <label class="switch">
-            <input type="checkbox" [checked]="!darkTheme" (change)="darkTheme = !darkTheme">
+            <input type="checkbox" [checked]="!darkTheme" (change)="darkTheme = !darkTheme;">
             <span class="slider round"></span>
           </label>
         </div>
@@ -22,9 +22,9 @@
   <div class="full-height flex scroll dashboard-container">
     <div class='form-sidebar scroll'>
       <div class='flex'>
-        <input id="stockTicker" (keyup.enter)='addSymbol()' [(ngModel)]='tickerSymbol' class="text-box" type="text"
+        <input id="stockTicker" (keyup.enter)='validate()' [(ngModel)]='tickerSymbol' class="text-box" type="text"
           placeholder="Stock Symbol" />
-        <button (click)='addSymbol()' class='button add-button'>Add</button>
+        <button (click)='validate()' class='button add-button'>Add</button>
       </div>
 
       <div class='stock-list'>
@@ -58,6 +58,11 @@
           values
           <span *ngFor='let symbol3 of barChartData[0].data'> {{symbol3}},</span>
         </div>
+        <div>
+          object values
+          <span *ngFor='let symbol4 of objectKeys(tickerSymbolsObj)'> {{symbol4}},</span>
+        </div>
+
       </div>
 
 
