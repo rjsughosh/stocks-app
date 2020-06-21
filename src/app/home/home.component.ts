@@ -35,9 +35,18 @@ export class HomeComponent implements OnInit {
     },
     plugins: {
       datalabels: {
-        anchor: 'end',
-        align: 'end',
+        anchor: 'center',
+        align: 'center',
         color: '#fff',
+        clamp: true
+      }
+    },
+    tooltips: {
+      callbacks: {
+        label: function (tooltipItem, data) {
+          const datasetLabel = data.datasets[tooltipItem.datasetIndex].label || '';
+          return datasetLabel + ': ' + tooltipItem.yLabel + ' USD';
+        }
       }
     }
   };
@@ -99,8 +108,8 @@ export class HomeComponent implements OnInit {
         },
         plugins: {
           datalabels: {
-            anchor: 'end',
-            align: 'end',
+            anchor: 'center',
+            align: 'center',
             color: '#fff',
           }
         }
@@ -122,8 +131,8 @@ export class HomeComponent implements OnInit {
         },
         plugins: {
           datalabels: {
-            anchor: 'end',
-            align: 'end',
+            anchor: 'center',
+            align: 'center',
             color: '#000'
           }
         }
@@ -132,20 +141,23 @@ export class HomeComponent implements OnInit {
     this.themeService.setColorschemesOptions(overrides);
   }
   validate() {
-    let stockName = this.tickerSymbol
-    let baseUrl = 'https://cloud.iexapis.com/stable/stock/'
-    let apiToken = 'pk_044db279039d465eb16ff69f5b0ead45';
-    let finalUrl = `${baseUrl}${stockName}/quote?token=${apiToken}`;
-    this.http.get<any>(finalUrl).subscribe(
-      data => {
-        this.isValid = true;
-        this.addToList();
-      },
-      error => {
-        this.toasterPop(`Failed to get data for ${stockName}: ${error.error}`);
-        this.tickerSymbol = ''
-        this.isValid = false;
-      });
+    if (this.tickerSymbol) {
+      let stockName = this.tickerSymbol
+      let baseUrl = 'https://cloud.iexapis.com/stable/stock/'
+      let apiToken = 'pk_044db279039d465eb16ff69f5b0ead45';
+      let finalUrl = `${baseUrl}${stockName}/quote?token=${apiToken}`;
+      this.http.get<any>(finalUrl).subscribe(
+        data => {
+          this.isValid = true;
+          this.addToList();
+        },
+        error => {
+          this.toasterPop(`Failed to get data for ${stockName}: ${error.error}`);
+          this.tickerSymbol = ''
+          this.isValid = false;
+        });
+    }
+
   }
   getData() {
     let str = ""
