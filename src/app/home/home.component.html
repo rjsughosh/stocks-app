@@ -11,7 +11,7 @@
         <div class="capitalize">switch theme</div>
         <div class='toggle-switch'>
           <label class="switch">
-            <input type="checkbox" [checked]="!darkTheme" (change)="darkTheme = !darkTheme;">
+            <input type="checkbox" [checked]="!darkTheme" (change)="darkTheme = !darkTheme;changeLabelColours();">
             <span class="slider round"></span>
           </label>
         </div>
@@ -74,11 +74,10 @@
     </div>
     <div class='flex flex-center flex-col graph-container'>
 
-
-      <div class='bar-chart full-height'>
-        <canvas height='450px' width='600px' *ngIf='barChartLabels.length' baseChart [datasets]="barChartData"
-          [labels]="barChartLabels" [options]="barChartOptions" [legend]="barChartLegend"
-          [chartType]="barChartType"></canvas>
+      <!-- height='450px' width='600px' -->
+      <div class='bar-chart flex flex-center flex-align-center'>
+        <canvas *ngIf='barChartLabels.length' baseChart [datasets]="barChartData" [labels]="barChartLabels"
+          [options]="barChartOptions" [legend]="barChartLegend" [chartType]="barChartType"></canvas>
 
         <div *ngIf='barChartLabels.length == 0' class='flex flex-col flex-center no-data'>
           <img *ngIf='!darkTheme' src='assets/cancel-dark.svg'>

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { ThemeService } from 'ng2-charts';
 import { HttpClient } from '@angular/common/http';
 import { ChartOptions, ChartType, ChartDataSets } from 'chart.js';
 import * as pluginDataLabels from 'chartjs-plugin-datalabels';
@@ -23,12 +23,12 @@ export class HomeComponent implements OnInit {
     scales: {
       xAxes: [{
         ticks: {
-          fontColor: '#888',
+          fontColor: '#fff',
         }
       }],
       yAxes: [{
         ticks: {
-          fontColor: '#888',
+          fontColor: '#fff',
         }
       }]
     },
@@ -67,15 +67,56 @@ export class HomeComponent implements OnInit {
   testUrl_post = "&types=quote&token=pk_044db279039d465eb16ff69f5b0ead45"
 
 
+
+
   constructor(
     private http: HttpClient,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    private themeService: ThemeService
   ) { }
 
 
+
+  changeLabelColours() {
+
+    let overrides: ChartOptions;
+    if (this.darkTheme) {
+      overrides = {
+        legend: {
+          labels: { fontColor: 'white' }
+        },
+        scales: {
+          xAxes: [{
+            ticks: { fontColor: 'white' },
+            gridLines: { color: 'rgba(255,255,255,0.1)' }
+          }],
+          yAxes: [{
+            ticks: { fontColor: 'white' },
+            gridLines: { color: 'rgba(255,255,255,0.1)' }
+          }]
+        }
+      };
+    } else {
+      overrides = {
+        legend: {
+          labels: { fontColor: '#000' }
+        },
+        scales: {
+          xAxes: [{
+            ticks: { fontColor: '#000' },
+            gridLines: { color: 'rgba(0,0,0,0.1)' }
+          }],
+          yAxes: [{
+            ticks: { fontColor: '#000' },
+            gridLines: { color: 'rgba(0,0,0,0.1)' }
+          }]
+        }
+      };
+    }
+    this.themeService.setColorschemesOptions(overrides);
+  }
   validate() {
     let stockName = this.tickerSymbol
-    debugger
     let baseUrl = 'https://cloud.iexapis.com/stable/stock/'
     let apiToken = 'pk_044db279039d465eb16ff69f5b0ead45';
     let finalUrl = `${baseUrl}${stockName}/quote?token=${apiToken}`;
