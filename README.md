@@ -1,4 +1,10 @@
-#VIsit the site on https://rjsughosh.github.io/stocks-app/
+**Live Demo** - [https://stocks-live.netlify.app/](https://stocks-live.netlify.app/)
+
+Dark Theme
+![Screenshot](src/assets/screenshot-dark.png)
+
+Light Theme
+![Screenshot](src/assets/screenshot-light.png)
 
 # StocksApp
 
