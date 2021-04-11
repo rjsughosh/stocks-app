@@ -147,16 +147,22 @@ export class HomeComponent implements OnInit {
     }
     this.themeService.setColorschemesOptions(overrides);
   }
-  validate() {
-    if (this.tickerSymbol) {
-      let stockName = this.tickerSymbol;
+  validate(params?) {
+    let param = "";
+    if (!params) {
+      param = this.tickerSymbol;
+    } else {
+      param = params;
+    }
+    if (param) {
+      let stockName = param;
       let baseUrl = "https://cloud.iexapis.com/stable/stock/";
       let apiToken = "pk_044db279039d465eb16ff69f5b0ead45";
       let finalUrl = `${baseUrl}${stockName}/quote?token=${apiToken}`;
       this.http.get<any>(finalUrl).subscribe(
         (data) => {
           this.isValid = true;
-          this.addToList();
+          this.addToList(stockName);
         },
         (error) => {
           this.toasterPop(
@@ -189,15 +195,15 @@ export class HomeComponent implements OnInit {
     }, 5000);
   }
 
-  addToList() {
+  addToList(newStock) {
     if (this.isValid) {
       if (this.tickerSymbols.length <= 9) {
-        if (!this.tickerSymbols.includes(this.tickerSymbol.toLowerCase())) {
-          this.tickerSymbols.push(this.tickerSymbol.toLowerCase());
+        if (!this.tickerSymbols.includes(newStock.toLowerCase())) {
+          this.tickerSymbols.push(newStock.toLowerCase());
           clearTimeout(this.timeoutKiller);
           this.getData();
         } else {
-          this.toasterPop(`${this.tickerSymbol} already exists`);
+          this.toasterPop(`${newStock} already exists`);
         }
       } else {
         this.disableInput = true;
@@ -233,8 +239,6 @@ export class HomeComponent implements OnInit {
       };
       this.graphArr.push(obj);
     }
-    console.log("graphArr", this.graphArr);
-    console.log("barChartData[0]", this.barChartData[0]);
 
     const barchartLabels = this.graphArr.map((i) => i.tickerSymbol);
     this.barChartLabels = cloneDeep(barchartLabels);
@@ -248,31 +252,36 @@ export class HomeComponent implements OnInit {
     this.tickerSymbols = [];
     this.graphArr = [];
     this.chartObj = {};
+    this.tickerSearchText = "";
+    this.searchResults = [];
     clearTimeout(this.timeoutKiller);
+  }
+
+  searchTicker() {
+    if (!this.tickerSearchText) {
+      this.searchResults = [];
+      return;
+    }
+    const Url = `https://financialmodelingprep.com/api/v3/search?query=${this.tickerSearchText}&limit=5&apikey=demo`;
+
+    this.http.get<any>(Url).subscribe(
+      (data) => {
+        console.log("search result", data);
+        const temp = data.filter((x) => x.currency === "USD");
+        this.searchResults = temp;
+      },
+      (error) => {
+        this.toasterPop(
+          `Failed to get data for "${this.tickerSearchText}" : ${error.error}`
+        );
+      }
+    );
   }
 
   toasterPop(message) {
     this.toastr.error(message, "Error", {
       timeOut: 3000,
     });
-  }
-
-  searchTicker() {
-    const finalUrl = `https://financialmodelingprep.com/api/v3/search?query=${this.tickerSearchText}&limit=5&apikey=demo`;
-
-    this.http.get<any>(finalUrl).subscribe(
-      (data) => {
-        console.log("search result", data);
-        this.searchResults = data;
-      },
-      (error) => {}
-    );
-  }
-
-  addTicker(ticker) {
-    this.tickerSymbols.push(ticker.toLowerCase());
-    clearTimeout(this.timeoutKiller);
-    this.getData();
   }
 
   ngOnInit() {}

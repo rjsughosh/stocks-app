@@ -25,6 +25,7 @@ header {
 
 .close-icon {
   font-size: 30px;
+  padding: 2px;
 }
 
 .bar-chart {
@@ -41,6 +42,10 @@ header {
   width: 25%;
   height: 2.5rem;
 }
+.search-button {
+  width: 25%;
+  height: 2.5rem;
+}
 .stock-list {
   .each-stock {
     padding: 1rem 0;
@@ -53,6 +58,19 @@ header {
 }
 .no-data {
   font-size: 1.2rem;
+}
+
+.search-results {
+  margin: 0.5rem 0;
+  border: 1px solid #666;
+  border-top: none;
+  .each-result {
+    padding: 0.5rem;
+    cursor: pointer;
+    &:hover {
+      background: #666;
+    }
+  }
 }
 
 //toggle switch
@@ -144,9 +162,6 @@ header {
   }
   .each-stock {
     border-bottom: 1px solid #333;
-    //   &:first-child{
-    //   border-top: 1px solid #333;
-    //   }
   }
   .text-box {
     background: #fff;
@@ -183,9 +198,6 @@ header {
     border-right: 1px solid #666;
   }
   .each-stock {
-    // &:first-child{
-    //     border-top: 1px solid #666;
-    //     }
     border-bottom: 1px solid #666;
   }
   .text-box {
@@ -234,4 +246,14 @@ header {
       // border-bottom: 1px solid #333;
     }
   }
+}
+
+.mb-05 {
+  margin-bottom: 0.5rem;
+}
+.mb-1 {
+  margin-bottom: 1rem;
+}
+.mb-2 {
+  margin-bottom: 2rem;
 }

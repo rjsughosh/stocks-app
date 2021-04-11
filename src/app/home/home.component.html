@@ -28,40 +28,50 @@
 
   <div class="full-height flex scroll dashboard-container">
     <div class="form-sidebar scroll">
-      <div class="flex hide">
-        <input
-          id="stockTicker"
-          (keyup.enter)="validate()"
-          [(ngModel)]="tickerSymbol"
-          class="text-box"
-          type="text"
-          placeholder="Stock Symbol"
-        />
-        <button (click)="validate()" class="button add-button">Add</button>
+      <div class="add-ticker-section mb-2">
+        <div class="theme-text mb-05">Add ticker</div>
+        <div class="flex">
+          <input
+            id="stockTicker"
+            (keyup.enter)="validate()"
+            [(ngModel)]="tickerSymbol"
+            class="text-box"
+            type="text"
+            placeholder="Stock Symbol"
+          />
+          <button (click)="validate()" class="button add-button">Add</button>
+        </div>
       </div>
 
-      <div class="flex">
-        <input
-          id="stockTickerSearch"
-          (keyup)="searchTicker()"
-          [(ngModel)]="tickerSearchText"
-          class="text-box"
-          type="text"
-          placeholder="Stock Search"
-        />
-        <button (click)="searchTicker()" class="button add-button">
-          Search
-        </button>
-      </div>
-      <div
-        class="theme-text"
-        *ngFor="let eachResult of searchResults"
-        (click)="addTicker(eachResult.symbol)"
-      >
-        {{ eachResult.name }} - {{ eachResult.symbol }}
+      <div class="stock-search-section mb-2">
+        <div class="theme-text mb-05">Search stock</div>
+        <div class="flex">
+          <input
+            id="stockTickerSearch"
+            (keyup)="searchTicker()"
+            [(ngModel)]="tickerSearchText"
+            class="text-box"
+            type="text"
+            placeholder="Search"
+          />
+          <button (click)="searchTicker()" class="button search-button">
+            <img height="20" *ngIf="darkTheme" src="assets/loupe-light.svg" />
+            <img height="20" *ngIf="!darkTheme" src="assets/loupe-dark.svg" />
+          </button>
+        </div>
+        <div *ngIf="searchResults.length > 0" class="search-results">
+          <div
+            class="theme-text each-result"
+            *ngFor="let eachResult of searchResults"
+            (click)="validate(eachResult.symbol)"
+          >
+            {{ eachResult.symbol }} - {{ eachResult.name }}
+          </div>
+        </div>
       </div>
 
-      <div class="stock-list">
+      <div *ngIf="graphArr.length > 0" class="stock-list">
+        <div class="theme-text mb-05">Stocks list</div>
         <ul>
           <li
             class="each-stock flex flex-align-center"
