@@ -55,8 +55,7 @@
             placeholder="Search"
           />
           <button (click)="searchTicker()" class="button search-button">
-            <img height="20" *ngIf="darkTheme" src="assets/loupe-light.svg" />
-            <img height="20" *ngIf="!darkTheme" src="assets/loupe-dark.svg" />
+            <img height="20" src="assets/loupe-light.svg" />
           </button>
         </div>
         <div *ngIf="searchResults.length > 0" class="search-results">

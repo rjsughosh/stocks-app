@@ -266,7 +266,6 @@ export class HomeComponent implements OnInit {
 
     this.http.get<any>(Url).subscribe(
       (data) => {
-        console.log("search result", data);
         const temp = data.filter((x) => x.currency === "USD");
         this.searchResults = temp;
       },
